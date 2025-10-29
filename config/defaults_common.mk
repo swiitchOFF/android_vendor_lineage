@@ -1,23 +1,3 @@
-# Do not generate libartd.
-PRODUCT_ART_TARGET_INCLUDE_DEBUG_BUILD := false
-
-# Strip the local variable table and the local variable type table to reduce
-# the size of the system image. This has no bearing on stack traces, but will
-# leave less information available via JDWP.
-PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
-
-# Use a profile based boot image for this device. Low ram optimized taken from atv devices.
-PRODUCT_USE_PROFILE_FOR_BOOT_IMAGE := true
-PRODUCT_COPY_FILES += vendor/lineage/product/lowram_boot_profiles/preloaded-classes:system/etc/preloaded-classes
-PRODUCT_DEX_PREOPT_BOOT_IMAGE_PROFILE_LOCATION := vendor/lineage/product/lowram_boot_profiles/boot-image-profile.txt
-
-PRODUCT_ARTIFACT_PATH_REQUIREMENT_ALLOWED_LIST += \
-system/etc/preloaded-classes.txt
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.minidebuginfo=false \
-    dalvik.vm.dex2oat-minidebuginfo=false
-
 # notice to builders: 
 # do not enable TARGET_IS_LOW_RAM if your device ram is greater than 4gb
 # else OOM will most likely occur on operations where applications and camera can fill heap limit
@@ -27,18 +7,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # extra cpu and battery. That's because the quicken files will be jit-ed in all
 # the processes that load of shared apk and the code cache is not shared.
 # Some notable apps that will be affected by this are gms and chrome.
-TARGET_IS_LOW_RAM ?= false
-ifeq ($(TARGET_IS_LOW_RAM),true)
-PRODUCT_PROPERTY_OVERRIDES += \
-    dalvik.vm.heapgrowthlimit=128m \
-    dalvik.vm.heapsize=256m \
-    pm.dexopt.shared=quicken \
-    dalvik.vm.madvise.vdexfile.size=31457280\
-    dalvik.vm.madvise.odexfile.size=31457280\
-    dalvik.vm.madvise.artfile.size=0
-endif
 
-###############
 TARGET_PRODUCT_PROP += \
     vendor/lineage/config/defaults_common.prop
 
